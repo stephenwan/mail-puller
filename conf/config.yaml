@@ -1,0 +1,38 @@
+---
+log: ~
+mailfetch_opts:
+  expunge_immediately: 1
+  mark_delete_on_success: 0
+  mark_seen_on_error: 1
+  mark_seen_on_success: 1
+  output_data_dir:
+    - dev/data
+    - template: :YEAR
+    - template: :MONTH
+    - template: :DATE
+    - template: :MAILBOX
+    - template: :TIMESTAMP--:UID
+  output_meta_dir:
+    - dev/meta
+    - template: :YEAR
+    - template: :MONTH
+    - template: :DATE
+    - template: :MAILBOX
+    - template: :TIMESTAMP--:UID
+  output_tasklog_dir:
+    - dev/task
+  search_flag: UNSEEN
+  time_range_max_in_hour: 24
+  time_range_min_in_hour: ~
+target_mailboxes:
+  - account: stephenwan@udomain.com.hk
+    password:
+      file: .secret
+    server: mail102@udomain.com.hk
+t:
+  ConfigProvider:
+    readscalar: "README"
+    readarray:
+      - zero
+      - one
+        

@@ -13,15 +13,15 @@ use ConfigProvider qw(getconfig);
 use Data::Dumper;
 use JSON;
 
-use Test::More  tests => 2;
+use Test::More  tests => 3;
 
 my $config = getconfig();
 
 is ( getconfig('t.ConfigProvider.readscalar'), 'README', 'Configuration access hash');
 is ( getconfig('t.ConfigProvider.readarray.1'), 'one', 'Configuration access array');
 
-
-
+my $output_dir = getconfig('output_dir');
+ok ( $output_dir->{data}  && $output_dir->{meta} && $output_dir->{tasklog}, 'Configuration contains dir information for data,meta,tasklog'); 
 
 
 

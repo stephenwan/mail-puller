@@ -7,6 +7,7 @@ use Carp;
 use Exporter;
 use Time::Piece;
 use File::Spec;
+use File::Path qw(make_path);
 
 our @ISA = qw(Exporter);
 
@@ -16,13 +17,18 @@ my $_cached_interpolated_vars;
 sub translate_path {    
     my $path_piece_array = shift;
     my $_dynamic_vars = shift // {};
-    
-    File::Spec->catdir(
-        map {
-            (ref $_ eq 'HASH')?
-                _render_template($_->{template}): $_
-        }  @$path_piece_array);    
+    my $create_if_not_exists = shift // 1;
+        
+    my $path = File::Spec->catdir(
+        map { (ref $_ eq 'HASH')?
+                  _render_template($_->{template}): $_
+              }  @$path_piece_array);
+
+    make_path($path) if $create_if_not_exists;
+    $path
 }
+
+
 
 
 sub _fetch_interpolatable_values {    
@@ -33,6 +39,7 @@ sub _fetch_interpolatable_values {
         ':DATE' => $t->mday,
         ':TIMESTAMP' => $t->epoch,
         ':MAILBOX' => $_dynamic_vars->{mailbox} // "",
+        ':FOLDER' => $_dynamic_vars->{folder} // "",
         ':UID' => $_dynamic_vars->{uid} // "",
     };
     $_cached_interpolated_vars
